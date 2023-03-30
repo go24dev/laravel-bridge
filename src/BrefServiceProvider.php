@@ -49,6 +49,11 @@ class BrefServiceProvider extends ServiceProvider
 
         $this->fixAwsCredentialsConfig();
 
+        // Config::set('cache.stores.dynamodb.token', env('AWS_SESSION_TOKEN'));
+        // Config::set('filesystems.disks.s3.token', env('AWS_SESSION_TOKEN'));
+        // Config::set('queue.connections.sqs.token', env('AWS_SESSION_TOKEN'));
+        // Config::set('services.ses.token', env('AWS_SESSION_TOKEN'));
+
         $this->app->when(QueueHandler::class)
             ->needs('$connection')
             ->giveConfig('queue.default');
@@ -73,26 +78,26 @@ class BrefServiceProvider extends ServiceProvider
             ], 'bref-config');
         }
 
-        $dispatcher->listen(
-            fn (JobProcessing $event) => $logManager->info(
-                "Processing job {$event->job->getJobId()}",
-                ['name' => $event->job->resolveName()]
-            )
-        );
+        // $dispatcher->listen(
+        //     fn (JobProcessing $event) => $logManager->info(
+        //         "Processing job {$event->job->getJobId()}",
+        //         ['name' => $event->job->resolveName()]
+        //     )
+        // );
 
-        $dispatcher->listen(
-            fn (JobProcessed $event) => $logManager->info(
-                "Processed job {$event->job->getJobId()}",
-                ['name' => $event->job->resolveName()]
-            )
-        );
+        // $dispatcher->listen(
+        //     fn (JobProcessed $event) => $logManager->info(
+        //         "Processed job {$event->job->getJobId()}",
+        //         ['name' => $event->job->resolveName()]
+        //     )
+        // );
 
-        $dispatcher->listen(
-            fn (JobExceptionOccurred $event) => $logManager->error(
-                "Job failed {$event->job->getJobId()}",
-                ['name' => $event->job->resolveName()]
-            )
-        );
+        // $dispatcher->listen(
+        //     fn (JobExceptionOccurred $event) => $logManager->error(
+        //         "Job failed {$event->job->getJobId()}",
+        //         ['name' => $event->job->resolveName()]
+        //     )
+        // );
 
         $dispatcher->listen(
             fn (JobFailed $event) => $queueFailer->log(
